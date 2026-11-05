@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SIH SmartCity Forma Planner</title>
+<meta name="description" content="Smart City Site Planning and Forma companion prototype for sustainable mixed-use planning, 3D model visualization, AI analysis, layout proposals, comparison, and BIM output.">
+<meta property="og:title" content="SIH SmartCity Forma Planner">
+<meta property="og:description" content="Smart City Site Planning and Forma companion prototype for sustainable mixed-use planning, 3D model visualization, AI analysis, layout proposals, comparison, and BIM output.">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "/three/build/three.module.js",
+    "three/addons/": "/three/examples/jsm/"
+  }
+}
+</script>
+
+<script>
+window.gm_authFailure = () => {
+  window.dispatchEvent(new CustomEvent('gmp-quota-exceeded'));
+};
+const origError = console.error;
+console.error = (...args) => {
+  origError.apply(console, args);
+  const msg = args.map((a) => String(a)).join(' ');
+  if (msg.includes('OverQuotaMapError') || msg.includes('QuotaExceededError')) {
+    window.dispatchEvent(new CustomEvent('gmp-quota-exceeded'));
+  }
+};
+window.addEventListener('gmp-quota-exceeded', () => {
+  const b = document.getElementById('gmp-quota-banner');
+  if (b) b.style.display = 'block';
+});
+</script>
+</head>
+<body>
+
+<div id="gmp-quota-banner" style="display:none;" class="gmp-quota-banner">
+  <span>
+    Google Maps Platform quota reached. If you are the app owner, visit
+    <a href="https://developers.google.com/maps/ai/ai-studio?utm_campaign=gmp_mcp_codeassist_v1_aistudio#quota_exceeded_errors" target="_blank" rel="noopener noreferrer">
+      maps developer site
+    </a>
+    for instructions to update your account.
+  </span>
+</div>
+
+<header>
+  <div class="brand">🏙️ <span>SmartCity Forma Planner</span></div>
+  <div id="roleBadge"></div>
+</header>
+
+<section id="login" class="login-wrap">
+  <div class="login-card">
+    <div class="eyebrow">SMART INDIA HACKATHON • 2026</div>
+    <h1>Site Planning Command Center</h1>
+    <p>Site → 3D Model → AI Analysis → Proposals → Comparison → Optimized Design → BIM</p>
+    <select id="role">
+      <option value="PLANNER">Site Planner</option>
+      <option value="LAYOUT">Layout Designer</option>
+      <option value="CONSTRUCTOR">Constructor</option>
+    </select>
+    <input id="username" placeholder="Username">
+    <input id="password" type="password" placeholder="Password">
+    <button onclick="login()">Enter dashboard</button>
+    <small>Demo: planner / planner123 • layout / layout123 • constructor / constructor123</small>
+  </div>
+</section>
+
+<main id="app" hidden>
+  <div class="hero">
+    <div>
+      <div class="eyebrow">DATA-DRIVEN URBAN PLANNING</div>
+      <h1 id="title">Dashboard</h1>
+      <p id="subtitle"></p>
+    </div>
+    <button class="secondary" onclick="logout()">Logout</button>
+  </div>
+  <nav id="tabs"></nav>
+  <section id="content"></section>
+</main>
+
+<div id="toast"></div>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
